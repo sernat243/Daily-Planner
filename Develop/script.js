@@ -4,11 +4,21 @@
 
 
 $(function () {
+  let currentDayEl = document.getElementById('currentDay');
+  
   let textAreaEls = document.getElementsByClassName('description');
   let saveBtns = document.getElementsByClassName('saveBtn');
     for (let i = 0; i < saveBtns.length; i++) {
      saveBtns[i].addEventListener('click', saveEvent);
   };
+
+function updateClock() {
+  let currentTime = dayjs().format('MMM-DD-YYYY HH:mm:ss');
+  currentDayEl.textContent = currentTime;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
 
 function saveEvent(event) {
   let newEvent = [];
