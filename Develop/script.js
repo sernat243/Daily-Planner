@@ -26,11 +26,29 @@ $(function () {
         eventInfo: description,
       }
 
-    console.log(parentId);
-    console.log(event.target);
-    console.log(description);
-    console.log(savedObject);
-}
+    let existingEventsString = localStorage.getItem('events');
+    let existingEvents = existingEventsString ? JSON.parse(existingEventsString) : [];
+
+    let updatedEvents = existingEvents.map(event => {
+      if (event.hour === parentId) {
+        event.eventInfo = description;
+      }
+      return event;
+    });
+    if (!existingEvents.some(event => event.hour === parentId)) {
+      updatedEvents.push(savedObject);
+    }
+
+    localStorage.setItem('events', JSON.stringify(updatedEvents));
+  }
+
+   // localStorage.setItem('eventInfo', JSON.stringify(savedObject));
+
+  //  console.log(parentId);
+    //console.log(event.target);
+    //console.log(description);
+    //console.log(savedObject);
+//};
 
   function checkTime() {
     let currentHour = parseInt(dayjs().format('H'), 10);
@@ -48,9 +66,24 @@ $(function () {
         timeBlock.classList.add('future');
       }
     }
-  }
+  };
+
+  function updatePlanner() {
+    let existingEventsString = localStorage.getItem('events');
+    if (existingEventsString) {
+      let existingEvents = JSON.parse(existingEventsString);
+      existingEvents.forEach(event => {
+        let textarea = document.querySelector('#' + event.hour + ' .description');
+        if (textarea) {
+          textarea.value = event.eventInfo;
+        }
+      })
+
+    }
+  };
 
   checkTime();
+  updatePlanner();
 
   for (let i = 0; i < saveBtns.length; i++) {
     saveBtns[i].addEventListener('click', saveEvent);
