@@ -4,20 +4,23 @@
 
 
 $(function () {
+  const hour9 = document.get
+
   let currentDayEl = document.getElementById('currentDay');
-  
   let textAreaEls = document.getElementsByClassName('description');
+  let timeBlockEls = document.getElementsByClassName('time-block');
   let saveBtns = document.getElementsByClassName('saveBtn');
     for (let i = 0; i < saveBtns.length; i++) {
      saveBtns[i].addEventListener('click', saveEvent);
   };
 
-function updateClock() {
+
   let currentTime = dayjs().format('MMM-DD-YYYY HH:mm:ss');
-  currentDayEl.textContent = currentTime;
-}
-updateClock();
-setInterval(updateClock, 1000);
+  function updateClock() {
+    currentDayEl.textContent = currentTime;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
 
 
 function saveEvent(event) {
@@ -28,6 +31,25 @@ function saveEvent(event) {
   console.log(description);
 
 }
+
+function checkTime() {
+    let currentHour = parseInt(dayjs().format('H'), 10);
+    console.log(currentHour);
+
+    for (let i = 0; i < timeBlockEls.length; i++) {
+      let timeBlock = timeBlockEls[i];
+      let hour = parseInt(timeBlock.id.split('-')[1], 10);
+
+      if (hour < currentHour) {
+        timeBlock.classList.add('past');
+      } else if (hour === currentHour) {
+        timeBlock.classList.add('present');
+      } else {
+        timeBlock.classList.add('future');
+      }
+    }
+}
+checkTime();
 
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
