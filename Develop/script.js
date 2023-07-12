@@ -4,35 +4,25 @@
 
 
 $(function () {
-  const hour9 = document.get
-
   let currentDayEl = document.getElementById('currentDay');
-  let textAreaEls = document.getElementsByClassName('description');
   let timeBlockEls = document.getElementsByClassName('time-block');
   let saveBtns = document.getElementsByClassName('saveBtn');
-    for (let i = 0; i < saveBtns.length; i++) {
-     saveBtns[i].addEventListener('click', saveEvent);
-  };
 
+  let currentTime;
 
-  let currentTime = dayjs().format('MMM-DD-YYYY HH:mm:ss');
   function updateClock() {
+    let currentTime = dayjs().format('MMM-DD-YYYY HH:mm:ss');
     currentDayEl.textContent = currentTime;
   }
-  updateClock();
-  setInterval(updateClock, 1000);
 
-
-function saveEvent(event) {
-  let newEvent = [];
-  let description = this.previousElementSibling.value
-  console.log(event.type);
-  console.log(event.target);
-  console.log(description);
-
+  function saveEvent(event) {
+    let description = event.target.previousElementSibling.value
+    console.log(event.type);
+    console.log(event.target);
+    console.log(description);
 }
 
-function checkTime() {
+  function checkTime() {
     let currentHour = parseInt(dayjs().format('H'), 10);
     console.log(currentHour);
 
@@ -48,10 +38,20 @@ function checkTime() {
         timeBlock.classList.add('future');
       }
     }
-}
-checkTime();
+  }
 
-  // TODO: Add a listener for click events on the save button. This code should
+  checkTime();
+
+  for (let i = 0; i < saveBtns.length; i++) {
+    saveBtns[i].addEventListener('click', saveEvent);
+ };
+
+  updateClock();
+  setInterval(updateClock, 1000);
+});
+
+
+// TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
   // function? How can DOM traversal be used to get the "hour-x" id of the
@@ -69,4 +69,3 @@ checkTime();
   // attribute of each time-block be used to do this?
   //
   // TODO: Add code to display the current date in the header of the page.
-});
