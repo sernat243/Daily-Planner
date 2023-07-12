@@ -10,6 +10,8 @@ $(function () {
 
   let currentTime;
 
+ 
+
   function updateClock() {
     let currentTime = dayjs().format('MMM-DD-YYYY HH:mm:ss');
     currentDayEl.textContent = currentTime;
@@ -17,9 +19,17 @@ $(function () {
 
   function saveEvent(event) {
     let description = event.target.previousElementSibling.value
-    console.log(event.type);
+    let parentId = event.target.parentNode.id;
+
+    let savedObject = {
+        hour: parentId,
+        eventInfo: description,
+      }
+
+    console.log(parentId);
     console.log(event.target);
     console.log(description);
+    console.log(savedObject);
 }
 
   function checkTime() {
