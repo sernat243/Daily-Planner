@@ -30,7 +30,7 @@ To access the Daily Planner, click [here](https://sernat243.github.io/Daily-Plan
 
 ## Screenshot
 
-![Daily Planner Screenshot](assets/images/screenshot.png)
+![Daily Planner Screenshot](Assets/images/screenshot.png)
 
 ## License
 
