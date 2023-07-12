@@ -4,59 +4,45 @@
 
 
 $(function () {
-  let currentDayEl = document.getElementById('currentDay');
-  let timeBlockEls = document.getElementsByClassName('time-block');
-  let saveBtns = document.getElementsByClassName('saveBtn');
+  const currentDayEl = document.getElementById('currentDay');
+  const timeBlockEls = document.querySelectorAll('.time-block');
+  const saveBtns = document.querySelectorAll('.saveBtn');
 
   let currentTime;
 
- 
-
   function updateClock() {
-    let currentTime = dayjs().format('MMM-DD-YYYY HH:mm:ss');
+    currentTime = dayjs().format('MMM-DD-YYYY HH:mm:ss');
     currentDayEl.textContent = currentTime;
   }
 
   function saveEvent(event) {
-    let description = event.target.previousElementSibling.value
-    let parentId = event.target.parentNode.id;
+    const description = event.target.parentNode.querySelector('.description').value;
+    const parentId = event.target.parentNode.id;
 
-    let savedObject = {
-        hour: parentId,
-        eventInfo: description,
-      }
+    const savedObject = {
+      hour: parentId,
+      eventInfo: description,
+    };
 
-    let existingEventsString = localStorage.getItem('events');
-    let existingEvents = existingEventsString ? JSON.parse(existingEventsString) : [];
+    let existingEvents = JSON.parse(localStorage.getItem('events')) || [];
+    const existingEventIndex = existingEvents.findIndex(event => event.hour === parentId);
 
-    let updatedEvents = existingEvents.map(event => {
-      if (event.hour === parentId) {
-        event.eventInfo = description;
-      }
-      return event;
-    });
-    if (!existingEvents.some(event => event.hour === parentId)) {
-      updatedEvents.push(savedObject);
+    if (existingEventIndex !== -1) {
+      existingEvents[existingEventIndex].eventInfo = description;
+    } else {
+      existingEvents.push(savedObject);
     }
 
-    localStorage.setItem('events', JSON.stringify(updatedEvents));
+    localStorage.setItem('events', JSON.stringify(existingEvents));
   }
 
-   // localStorage.setItem('eventInfo', JSON.stringify(savedObject));
-
-  //  console.log(parentId);
-    //console.log(event.target);
-    //console.log(description);
-    //console.log(savedObject);
-//};
-
   function checkTime() {
-    let currentHour = parseInt(dayjs().format('H'), 10);
-    console.log(currentHour);
+    const currentHour = parseInt(dayjs().format('H'), 10);
 
-    for (let i = 0; i < timeBlockEls.length; i++) {
-      let timeBlock = timeBlockEls[i];
-      let hour = parseInt(timeBlock.id.split('-')[1], 10);
+    timeBlockEls.forEach(timeBlock => {
+      const hour = parseInt(timeBlock.id.split('-')[1], 10);
+
+      timeBlock.classList.remove('past', 'present', 'future');
 
       if (hour < currentHour) {
         timeBlock.classList.add('past');
@@ -65,33 +51,31 @@ $(function () {
       } else {
         timeBlock.classList.add('future');
       }
-    }
-  };
+    });
+  }
 
   function updatePlanner() {
-    let existingEventsString = localStorage.getItem('events');
-    if (existingEventsString) {
-      let existingEvents = JSON.parse(existingEventsString);
-      existingEvents.forEach(event => {
-        let textarea = document.querySelector('#' + event.hour + ' .description');
-        if (textarea) {
-          textarea.value = event.eventInfo;
-        }
-      })
+    const existingEvents = JSON.parse(localStorage.getItem('events')) || [];
 
-    }
-  };
+    existingEvents.forEach(event => {
+      const textarea = document.querySelector(`#${event.hour} .description`);
+      if (textarea) {
+        textarea.value = event.eventInfo;
+      }
+    });
+  }
 
   checkTime();
   updatePlanner();
 
-  for (let i = 0; i < saveBtns.length; i++) {
-    saveBtns[i].addEventListener('click', saveEvent);
- };
+  saveBtns.forEach(saveBtn => {
+    saveBtn.addEventListener('click', saveEvent);
+  });
 
   updateClock();
   setInterval(updateClock, 1000);
 });
+
 
 
 // TODO: Add a listener for click events on the save button. This code should
